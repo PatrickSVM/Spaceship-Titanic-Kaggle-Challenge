@@ -1,5 +1,7 @@
-# Exclude experiment file
+# Exclude experiment files and folder
+Experimental_files
 Spaceship_Titanic_Experiments.ipynb
+GoodtoKnow.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
