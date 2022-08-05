@@ -356,6 +356,13 @@ def impute_spaceship_titanic(preprocessed_df, proba_imp=True, expense_strat='gro
         # Impute Deck with Deck from group, otherwise with most likely one: F
         impute["Deck"] = impute["Deck"].fillna(impute.groupby("GroupID")["Deck"].transform(impute_group_category, mode="F"))
         
+        # Impute Side with Side from group, otherwise with "Missing":
+        impute["Side"] = impute["Side"].fillna(impute.groupby("GroupID")["Side"].transform(impute_group_category, mode="Missing"))
+        
+        # Impute CabinNum with CabinNum from group, otherwise with "Missing":
+        impute["CabinNum"] = impute["CabinNum"].fillna(impute.groupby("GroupID")["CabinNum"].transform(impute_group_category, mode="Missing"))
+        
+        
         # All expenses = 0 besides NaN values -> other expenses also 0 with high likelihood (showed in last part of analysis)
         mask3 = ~impute.CryoSleep & ((impute.iloc[:,6:11].isna().sum(1) + (impute.iloc[:,6:11]==0).sum(1))==5) & (impute.iloc[:,6:11].isna().sum(1)>0)
         impute.loc[mask3, ['RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']] = impute.loc[mask3, ['RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']].fillna(0)
@@ -368,14 +375,15 @@ def impute_spaceship_titanic(preprocessed_df, proba_imp=True, expense_strat='gro
         
         # Age imputation
         if age_strat=='mean':
-            impute = impute.fillna({"Age":impute.Age.mean()})
+            impute = impute.fillna({"Age":impute.Age.mean().round()})
             
         elif age_strat=='group_mean':
             # Impute group mean if possible
-            impute[impute.GroupSize>1] = impute[impute.GroupSize>1].fillna({"Age":impute.groupby("GroupID")["Age"].transform("mean")})
+            impute[impute.GroupSize>1] = impute[impute.GroupSize>1].fillna({"Age":impute.groupby("GroupID")["Age"].transform("mean").round()})
                                                                         
             # Ohterwise take mean age of all passengers travelling alone
-            impute[impute.GroupSize==1] = impute[impute.GroupSize==1].fillna({"Age": impute[impute.GroupSize==1].Age.mean()})
+            impute[impute.GroupSize==1] = impute[impute.GroupSize==1].fillna({"Age": impute[impute.GroupSize==1].Age.mean().round()})
+        
         
         else:
             raise ValueError("Wrong parameter value given.")
@@ -384,9 +392,7 @@ def impute_spaceship_titanic(preprocessed_df, proba_imp=True, expense_strat='gro
         
         # Columns that will not be used anyways are just filled with string "Missing" (we can still keep those rows):
         # Name/CabinNum/Side
-        impute = impute.fillna({"Name":"Missing", 
-                                "CabinNum": "Missing",
-                                "Side": "Missing"})
+        impute = impute.fillna({"Name":"Missing"})
     
     return impute
 
@@ -425,7 +431,10 @@ def post_imputation_process_spaceship_titanic(imputed_df, was_log_transf):
     final = imputed_df.copy()
     
     # Impute small amount of remaining NaNs
-    final = final.fillna({"CryoSleep": False, "Age":final.Age.mean()})
+    final = final.fillna({"CryoSleep": False, "Age":final.Age.mean().round()})
+    
+    # Transform age to int
+    final.Age = final.Age.astype(int)
     
     # Update TotalExp
     if was_log_transf: # If they were log-transformed, backtransform, recalculate total, transform
