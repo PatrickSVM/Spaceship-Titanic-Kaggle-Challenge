@@ -1,0 +1,5 @@
+name: TF_M1
+channels:
+  - defaults
+  - conda-forge
+prefix: /opt/homebrew/Caskroom/miniforge/base/envs/TF_M1
