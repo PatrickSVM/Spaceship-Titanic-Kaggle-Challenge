@@ -1,4 +1,6 @@
 # Exclude experiment files and folder
+wandb
+catboost_info
 Experimental_files
 Spaceship_Titanic_Experiments.ipynb
 GoodtoKnow.ipynb
