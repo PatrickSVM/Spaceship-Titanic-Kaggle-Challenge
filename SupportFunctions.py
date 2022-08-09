@@ -145,6 +145,7 @@ def impute_group_category(group_categories, mode):
             if (homes_count==max(homes_count)).sum()==1: # If clear decision (so max only occurs once) take it
                 return homes_count.idxmax()
             else: # There are two planets with same max count - sample one of them to reduce bias 
+                np.random.seed(123) # Set random seed for numpy (important for repoducability)
                 return np.random.choice(homes_count[homes_count==max(homes_count)].index) # Sample one of them
     
     else:
