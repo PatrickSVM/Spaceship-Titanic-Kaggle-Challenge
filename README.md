@@ -4,7 +4,7 @@ The following repository provides my personal approach to the [Spaceship Titanic
 
 My best submission was created using the GradientBoostingClassifier and a lot of experimenting and reached **over 80.8% (Top 6%, place 157/2455 on 09.08.22)**. The GB-Classifier included in the notebook is reproducible and scores over 80.4% on the test data. 
 
-Note: Only two of the models explored during the modeling process are covered in the [notebook](https://github.com/PatrickSVM/Spaceship-Titanic-Kaggle-Challenge/blob/main/Spaceship_Titanic_Kaggle_Project.ipynb).
+Note: Only two of the models explored during the modeling process are covered in the [notebook](https://github.com/PatrickSVM/Spaceship-Titanic-Kaggle-Competition/blob/main/Spaceship_Titanic_Kaggle_Project.ipynb).
  
 <br>
 
